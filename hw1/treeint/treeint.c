@@ -426,21 +426,32 @@ void printtree(struct st_node *root, char* prefix, enum st_dir d)
 {
     if(root == NULL) return;
 
-    char *tt;
+    char *temp_char;
     if(root->right) {
-        tt = (d==LEFT ?  "│  ": "   ");
+        if(d == LEFT){
+            temp_char = "|   ";
+        }else{
+            temp_char = "   ";
+        }
         char temp[256]={0};
-        sprintf(temp, "%s%s", prefix, tt);
+        sprintf(temp, "%s%s", prefix, temp_char);
         printtree(root->right, temp, RIGHT);
     }
-
-    printf("%s%s", prefix, (d==LEFT ? "└─ (L) " : "┌─ (R) "));
-    printf("[%d]\n", treeint_entry(root)->value);
+    if(d == LEFT){
+        temp_char = "└─ (L) ";
+    }else{
+        temp_char = "┌─ (R) ";
+    }
+    printf("%s%s[%d]\n", prefix, temp_char,  treeint_entry(root)->value);
 
     if (root->left) {
-        tt = (d==LEFT ? "   " : "│  ");
+        if(d == LEFT){
+            temp_char = "    ";
+        }else{
+            temp_char = "|  ";
+        }
         char temp1[256]={0};
-        sprintf(temp1, "%s%s", prefix, tt);
+        sprintf(temp1, "%s%s", prefix, temp_char);
         printtree(root->left, temp1, LEFT);
     }
 }
@@ -451,58 +462,58 @@ int main()
 
     treeint_init();
 
-    for (int i = 0; i < 100; ++i)
-        treeint_insert(rand() % 99);
-    // treeint_insert(1);
-    // printtree(st_root(tree), "", LEFT);
-    // printf("---------------------------------\n");
+    // for (int i = 0; i < 100; ++i)
+    //     treeint_insert(rand() % 99);
+    treeint_insert(1);
+    printtree(st_root(tree), "", LEFT);
+    printf("---------------------------------\n");
 
-    // treeint_insert(2);
-    // printtree(st_root(tree),"",LEFT);
-    // printf("---------------------------------\n");
+    treeint_insert(2);
+    printtree(st_root(tree),"",LEFT);
+    printf("---------------------------------\n");
 
-    // treeint_insert(3);
-    // printtree(st_root(tree),"",LEFT);
-    // printf("---------------------------------\n");
+    treeint_insert(3);
+    printtree(st_root(tree),"",LEFT);
+    printf("---------------------------------\n");
 
-    // treeint_insert(4);
-    // printtree(st_root(tree),"",LEFT);
-    // printf("---------------------------------\n");
+    treeint_insert(4);
+    printtree(st_root(tree),"",LEFT);
+    printf("---------------------------------\n");
 
-    // treeint_insert(5);
-    // printtree(st_root(tree),"",LEFT);
-    // printf("---------------------------------\n");
+    treeint_insert(5);
+    printtree(st_root(tree),"",LEFT);
+    printf("---------------------------------\n");
 
-    // treeint_insert(6);
-    // printtree(st_root(tree),"",LEFT);
-    // printf("---------------------------------\n");
+    treeint_insert(6);
+    printtree(st_root(tree),"",LEFT);
+    printf("---------------------------------\n");
 
-    // treeint_insert(7);
-    // printtree(st_root(tree),"",LEFT);
-    // printf("---------------------------------\n");
+    treeint_insert(7);
+    printtree(st_root(tree),"",LEFT);
+    printf("---------------------------------\n");
 
     // printf("[ After insertions ]\n");
-    // // treeint_dump();
+    // treeint_dump();
     // printf("---------------------------------\n");
 
-    printtree(st_root(tree),"",LEFT);
+    // printtree(st_root(tree),"",LEFT);
 
-    printf("Removing...\n");
-    for (int i = 0; i < 100; ++i) {
-        int v = rand() % 99;
-        printf("%2d  ", v);
-        if ((i + 1) % 10 == 0)
-            printf("\n");
-        treeint_remove(v);
-    }
-    printf("\n");
+    // printf("Removing...\n");
+    // for (int i = 0; i < 100; ++i) {
+    //     int v = rand() % 99;
+    //     printf("%2d  ", v);
+    //     if ((i + 1) % 10 == 0)
+    //         printf("\n");
+    //     treeint_remove(v);
+    // }
+    // printf("\n");
 
-    printf("[ After removals ]\n");
-    // // treeint_dump();
+    // printf("[ After removals ]\n");
+    // // // treeint_dump();
 
-    printtree(st_root(tree), "", true);
+    // printtree(st_root(tree), "", true);
 
-    printf("---------------------------------\n");
+    // printf("---------------------------------\n");
     treeint_destroy();
 
     return 0;
