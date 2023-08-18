@@ -37,6 +37,7 @@
  * required to be absolutely accurate. A hint provides an approximation
  * of the longest chain of nodes under the node to which the hint is attached.
  */
+#include <stdbool.h>
 struct st_node {
     short hint;
     struct st_node *parent;
@@ -421,6 +422,29 @@ void treeint_dump()
     __treeint_dump(st_root(tree), 0);
 }
 
+void printtree(struct st_node *root, char* prefix, enum st_dir d)
+{
+    if(root == NULL) return;
+
+    char *tt;
+    if(root->right) {
+        tt = (d==LEFT ?  "│  ": "   ");
+        char temp[256]={0};
+        sprintf(temp, "%s%s", prefix, tt);
+        printtree(root->right, temp, RIGHT);
+    }
+
+    printf("%s%s", prefix, (d==LEFT ? "└─ (L) " : "┌─ (R) "));
+    printf("[%d]\n", treeint_entry(root)->value);
+
+    if (root->left) {
+        tt = (d==LEFT ? "   " : "│  ");
+        char temp1[256]={0};
+        sprintf(temp1, "%s%s", prefix, tt);
+        printtree(root->left, temp1, LEFT);
+    }
+}
+
 int main()
 {
     srand(time(0));
@@ -429,9 +453,39 @@ int main()
 
     for (int i = 0; i < 100; ++i)
         treeint_insert(rand() % 99);
+    // treeint_insert(1);
+    // printtree(st_root(tree), "", LEFT);
+    // printf("---------------------------------\n");
 
-    printf("[ After insertions ]\n");
-    treeint_dump();
+    // treeint_insert(2);
+    // printtree(st_root(tree),"",LEFT);
+    // printf("---------------------------------\n");
+
+    // treeint_insert(3);
+    // printtree(st_root(tree),"",LEFT);
+    // printf("---------------------------------\n");
+
+    // treeint_insert(4);
+    // printtree(st_root(tree),"",LEFT);
+    // printf("---------------------------------\n");
+
+    // treeint_insert(5);
+    // printtree(st_root(tree),"",LEFT);
+    // printf("---------------------------------\n");
+
+    // treeint_insert(6);
+    // printtree(st_root(tree),"",LEFT);
+    // printf("---------------------------------\n");
+
+    // treeint_insert(7);
+    // printtree(st_root(tree),"",LEFT);
+    // printf("---------------------------------\n");
+
+    // printf("[ After insertions ]\n");
+    // // treeint_dump();
+    // printf("---------------------------------\n");
+
+    printtree(st_root(tree),"",LEFT);
 
     printf("Removing...\n");
     for (int i = 0; i < 100; ++i) {
@@ -444,8 +498,11 @@ int main()
     printf("\n");
 
     printf("[ After removals ]\n");
-    treeint_dump();
+    // // treeint_dump();
 
+    printtree(st_root(tree), "", true);
+
+    printf("---------------------------------\n");
     treeint_destroy();
 
     return 0;
