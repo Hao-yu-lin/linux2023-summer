@@ -37,7 +37,7 @@
  * required to be absolutely accurate. A hint provides an approximation
  * of the longest chain of nodes under the node to which the hint is attached.
  */
-
+#include <stdio.h>
 static int rotate_count = 0;
 static int updata_count = 0;
 static int interation_count = 0;
@@ -149,33 +149,32 @@ static inline void st_update(struct st_node **root, struct st_node *n)
 
     int b = st_balance(n);
     int prev_hint = n->hint;
+    // int prev_hint = b;
     struct st_node *p = st_parent(n);
-
+   
+    
     if (b < -1) {
         /* leaning to the right */
-        if (st_left(st_right(n)) && st_balance(st_right(n)) > 0)
-            st_rotate_left(st_right(n));
-       
+        rotate_count ++;
         if (n == *root)
             *root = st_right(n);
         st_rotate_right(n);
         prev_hint = b;
-        rotate_count ++;
+
     }
 
     else if (b > 1) {
         /* leaning to the left */
-        if (st_right(st_left(n)) && st_balance(st_left(n)) < 0)
-            st_rotate_right(st_left(n));
-
+        rotate_count ++;
         if (n == *root)
             *root = st_left(n);
-        prev_hint = b;
-        st_rotate_left(n);
         
+        st_rotate_left(n);
+        prev_hint = b;
     }
 
     n->hint = st_max_hint(n);
+    
     if (n->hint == 0 || n->hint != prev_hint)
         st_update(root, p);
 }
@@ -499,56 +498,56 @@ int main()
     * worst case
     */
 
-    // treeint_insert(1);
-    // printtree(st_root(tree), "", LEFT);
-    // printcount();
-    // printf("---------------------------------\n");
+    treeint_insert(1);
+    printtree(st_root(tree), "", LEFT);
+    printcount();
+    printf("---------------------------------\n");
 
 
-    // treeint_insert(1000);
-    // printtree(st_root(tree),"",LEFT);
-    // printcount();
-    // printf("---------------------------------\n");
+    treeint_insert(1000);
+    printtree(st_root(tree),"",LEFT);
+    printcount();
+    printf("---------------------------------\n");
 
 
-    // treeint_insert(900);
-    // printtree(st_root(tree),"",LEFT);
-    // printcount();
-    // printf("---------------------------------\n");
+    treeint_insert(900);
+    printtree(st_root(tree),"",LEFT);
+    printcount();
+    printf("---------------------------------\n");
 
 
-    // treeint_insert(800);
-    // printtree(st_root(tree),"",LEFT);
-    // printcount();
-    // printf("---------------------------------\n");
+    treeint_insert(800);
+    printtree(st_root(tree),"",LEFT);
+    printcount();
+    printf("---------------------------------\n");
 
-    // treeint_insert(700);
-    // printtree(st_root(tree),"",LEFT);
-    // printcount();
-    // printf("---------------------------------\n");
+    treeint_insert(700);
+    printtree(st_root(tree),"",LEFT);
+    printcount();
+    printf("---------------------------------\n");
 
-    // treeint_insert(600);
-    // printtree(st_root(tree),"",LEFT);
-    // printcount();
-    // printf("---------------------------------\n");
+    treeint_insert(600);
+    printtree(st_root(tree),"",LEFT);
+    printcount();
+    printf("---------------------------------\n");
 
-    // treeint_insert(500);
-    // printtree(st_root(tree),"",LEFT);
-    // printcount();
-    // printf("---------------------------------\n");
+    treeint_insert(500);
+    printtree(st_root(tree),"",LEFT);
+    printcount();
+    printf("---------------------------------\n");
 
     /*
     insert test case
     */
-    treeint_insert(1);
-    treeint_insert(1000);
-    treeint_insert(900);
-    treeint_insert(700);
-    treeint_insert(600);
-    treeint_insert(500);
-    treeint_insert(400);
-    treeint_insert(1200);
-    treeint_insert(1100);
+    // treeint_insert(1);
+    // treeint_insert(1000);
+    // treeint_insert(900);
+    // treeint_insert(700);
+    // treeint_insert(600);
+    // treeint_insert(500);
+    // treeint_insert(400);
+    // treeint_insert(1200);
+    // treeint_insert(1100);
 
     printtree(st_root(tree), "", LEFT);
     printcount();
