@@ -37,7 +37,12 @@
  * required to be absolutely accurate. A hint provides an approximation
  * of the longest chain of nodes under the node to which the hint is attached.
  */
-#include <stdbool.h>
+
+static int rotate_count = 0;
+static int updata_count = 0;
+static int interation_count = 0;
+
+
 struct st_node {
     short hint;
     struct st_node *parent;
@@ -94,7 +99,7 @@ static inline void st_rotate_left(struct st_node *n)
 static inline void st_rotate_right(struct st_node *n)
 {
     struct st_node *r = st_right(n), *p = st_parent(n);
-
+    
     st_parent(r) = st_parent(n);
     st_right(n) = st_left(r);
     st_parent(n) = r;
@@ -107,6 +112,7 @@ static inline void st_rotate_right(struct st_node *n)
 
     if (st_right(n))
         st_rparent(n) = n;
+    
 }
 
 static inline int st_balance(struct st_node *n)
@@ -137,6 +143,7 @@ static inline int st_max_hint(struct st_node *n)
 
 static inline void st_update(struct st_node **root, struct st_node *n)
 {
+    updata_count++;
     if (!n)
         return;
 
@@ -146,16 +153,26 @@ static inline void st_update(struct st_node **root, struct st_node *n)
 
     if (b < -1) {
         /* leaning to the right */
+        if (st_left(st_right(n)) && st_balance(st_right(n)) > 0)
+            st_rotate_left(st_right(n));
+       
         if (n == *root)
             *root = st_right(n);
         st_rotate_right(n);
+        prev_hint = b;
+        rotate_count ++;
     }
 
     else if (b > 1) {
         /* leaning to the left */
+        if (st_right(st_left(n)) && st_balance(st_left(n)) < 0)
+            st_rotate_right(st_left(n));
+
         if (n == *root)
             *root = st_left(n);
+        prev_hint = b;
         st_rotate_left(n);
+        
     }
 
     n->hint = st_max_hint(n);
@@ -379,6 +396,7 @@ struct treeint *treeint_find(int a)
 {
     struct st_node *n = st_root(tree);
     while (n) {
+        interation_count ++;
         struct treeint *t = treeint_entry(n);
         if (a == t->value)
             return t;
@@ -422,7 +440,7 @@ void treeint_dump()
     __treeint_dump(st_root(tree), 0);
 }
 
-void printtree(struct st_node *root, char* prefix, enum st_dir d)
+static inline void printtree(struct st_node *root, char* prefix, enum st_dir d)
 {
     if(root == NULL) return;
 
@@ -442,7 +460,7 @@ void printtree(struct st_node *root, char* prefix, enum st_dir d)
     }else{
         temp_char = "┌─ (R) ";
     }
-    printf("%s%s[%d]\n", prefix, temp_char,  treeint_entry(root)->value);
+    printf("%s%s[%d](hint:%d)\n", prefix, temp_char,  treeint_entry(root)->value, root->hint);
 
     if (root->left) {
         if(d == LEFT){
@@ -456,64 +474,113 @@ void printtree(struct st_node *root, char* prefix, enum st_dir d)
     }
 }
 
+static inline void printcount(){
+    printf("rotate:%d, update:%d, iteration:%d\n", rotate_count, updata_count, interation_count);
+    rotate_count = 0;
+    updata_count = 0;
+    interation_count = 0;
+}
+
 int main()
 {
     srand(time(0));
 
     treeint_init();
 
-    // for (int i = 0; i < 100; ++i)
-    //     treeint_insert(rand() % 99);
-    treeint_insert(1);
-    printtree(st_root(tree), "", LEFT);
-    printf("---------------------------------\n");
+    // for (int i = 0; i < 10; ++i){
+    //     treeint_insert(rand() % 20);
+    //     printtree(st_root(tree), "", LEFT);
+    //     printcount();
+    //     printf("---------------------------------\n");
+    // }
+       
 
-    treeint_insert(2);
-    printtree(st_root(tree),"",LEFT);
-    printf("---------------------------------\n");
+    /*
+    * worst case
+    */
 
-    treeint_insert(3);
-    printtree(st_root(tree),"",LEFT);
-    printf("---------------------------------\n");
-
-    treeint_insert(4);
-    printtree(st_root(tree),"",LEFT);
-    printf("---------------------------------\n");
-
-    treeint_insert(5);
-    printtree(st_root(tree),"",LEFT);
-    printf("---------------------------------\n");
-
-    treeint_insert(6);
-    printtree(st_root(tree),"",LEFT);
-    printf("---------------------------------\n");
-
-    treeint_insert(7);
-    printtree(st_root(tree),"",LEFT);
-    printf("---------------------------------\n");
-
-    // printf("[ After insertions ]\n");
-    // treeint_dump();
+    // treeint_insert(1);
+    // printtree(st_root(tree), "", LEFT);
+    // printcount();
     // printf("---------------------------------\n");
 
+
+    // treeint_insert(1000);
     // printtree(st_root(tree),"",LEFT);
+    // printcount();
+    // printf("---------------------------------\n");
+
+
+    // treeint_insert(900);
+    // printtree(st_root(tree),"",LEFT);
+    // printcount();
+    // printf("---------------------------------\n");
+
+
+    // treeint_insert(800);
+    // printtree(st_root(tree),"",LEFT);
+    // printcount();
+    // printf("---------------------------------\n");
+
+    // treeint_insert(700);
+    // printtree(st_root(tree),"",LEFT);
+    // printcount();
+    // printf("---------------------------------\n");
+
+    // treeint_insert(600);
+    // printtree(st_root(tree),"",LEFT);
+    // printcount();
+    // printf("---------------------------------\n");
+
+    // treeint_insert(500);
+    // printtree(st_root(tree),"",LEFT);
+    // printcount();
+    // printf("---------------------------------\n");
+
+    /*
+    insert test case
+    */
+    treeint_insert(1);
+    treeint_insert(1000);
+    treeint_insert(900);
+    treeint_insert(700);
+    treeint_insert(600);
+    treeint_insert(500);
+    treeint_insert(400);
+    treeint_insert(1200);
+    treeint_insert(1100);
+
+    printtree(st_root(tree), "", LEFT);
+    printcount();
+    // printf("[ After insertions ]\n");
+   
+    // treeint_dump();
+
+    // printf("---------------------------------\n");
+
+    // // printtree(st_root(tree),"",LEFT);
 
     // printf("Removing...\n");
-    // for (int i = 0; i < 100; ++i) {
-    //     int v = rand() % 99;
-    //     printf("%2d  ", v);
+    // int erase[10] = {1, 19, 1000, 16, 700, 600, 1200, 900, 500};
+    // for (int i = 0; i < 10; ++i) {
+    //     int v = erase[i];
+    //     printf("remove: %2d  ", v);
     //     if ((i + 1) % 10 == 0)
-    //         printf("\n");
+    //         printf("\n\n");
     //     treeint_remove(v);
+    //     printtree(st_root(tree), "", LEFT);
+    //     printcount();
+    //     printf("---------------------------------\n");
     // }
+    
     // printf("\n");
 
     // printf("[ After removals ]\n");
-    // // // treeint_dump();
+    // treeint_dump();
 
-    // printtree(st_root(tree), "", true);
+    // printtree(st_root(tree), "", LEFT);
 
-    // printf("---------------------------------\n");
+    printf("---------------------------------\n");
     treeint_destroy();
 
     return 0;
