@@ -85,7 +85,8 @@ int main(int argc, char** argv) {
     wake_futex_blocking(shared_data);
   } else {
     // Parent process.
-
+    sleep(1);
+    // wait(NULL);
     printf("parent writing A\n");
     // Write 0xA to the shared data and wake up child.
     *shared_data = 0xA;

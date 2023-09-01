@@ -27,7 +27,7 @@ static bool clock_wait(struct clock *clock, int ticks)
     bool ret = clock->ticks >= ticks;
     mutex_unlock(&clock->mutex);
     return ret;
-}
+}   
 
 static void clock_tick(struct clock *clock)
 {
