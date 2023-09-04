@@ -161,8 +161,8 @@ void qsort_mt(void *a,
         qs->st = ts_idle;
         qs->common = &c;
         if (pthread_create(&qs->id, NULL, qsort_thread, qs) != 0) {
-            // verify(pthread_mutex_destroy(&qs->mtx_st));
-            // verify(pthread_cond_destroy(&qs->cond_st));
+            // verify(pthread_mutex_destroy(&qs->fmutex_st ));
+            // verify(pthread_cond_destroy(&qs->fcond_st));
             goto f3;
         }
     }
@@ -562,9 +562,10 @@ int main(int argc, char *argv[])
     }
     if (opt_time)
         printf(
-            "%.3g %.3g %.3g\n",
-            (end.tv_sec - start.tv_sec) + (end.tv_usec - start.tv_usec) / 1e6,
-            ru.ru_utime.tv_sec + ru.ru_utime.tv_usec / 1e6,
-            ru.ru_stime.tv_sec + ru.ru_stime.tv_usec / 1e6);
+            // "%.3g %.3g %.3g\n",
+            // (end.tv_sec - start.tv_sec) + (end.tv_usec - start.tv_usec) / 1e6,
+            // ru.ru_utime.tv_sec + ru.ru_utime.tv_usec / 1e6,
+            // ru.ru_stime.tv_sec + ru.ru_stime.tv_usec / 1e6);
+            "%.3g\n",(end.tv_sec - start.tv_sec) + (end.tv_usec - start.tv_usec) / 1e6);
     return (0);
 }

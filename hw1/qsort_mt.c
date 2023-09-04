@@ -210,8 +210,9 @@ static struct qsort *allocate_thread(struct common *c)
     for (int i = 0; i < c->nthreads; i++)
         if (c->pool[i].st == ts_idle) {
             c->idlethreads--;
-            c->pool[i].st = ts_work;
+            
             verify(pthread_mutex_lock(&c->pool[i].mtx_st));
+            c->pool[i].st = ts_work;
             verify(pthread_mutex_unlock(&c->mtx_al));
             return (&c->pool[i]);
         }
@@ -519,9 +520,11 @@ int main(int argc, char *argv[])
     }
     if (opt_time)
         printf(
-            "%.3g %.3g %.3g\n",
-            (end.tv_sec - start.tv_sec) + (end.tv_usec - start.tv_usec) / 1e6,
-            ru.ru_utime.tv_sec + ru.ru_utime.tv_usec / 1e6,
-            ru.ru_stime.tv_sec + ru.ru_stime.tv_usec / 1e6);
+            // "%.3g %.3g %.3g\n",
+            // (end.tv_sec - start.tv_sec) + (end.tv_usec - start.tv_usec) / 1e6,
+            // ru.ru_utime.tv_sec + ru.ru_utime.tv_usec / 1e6,
+            // ru.ru_stime.tv_sec + ru.ru_stime.tv_usec / 1e6);
+             "%.3g\n",(end.tv_sec - start.tv_sec) + (end.tv_usec - start.tv_usec) / 1e6);
+
     return (0);
 }
