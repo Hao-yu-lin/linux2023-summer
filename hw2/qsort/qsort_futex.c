@@ -6,9 +6,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include "futex.h"
 #include "cond.h"
+#include "futex.h"
 #include "mutex.h"
 
 
@@ -30,8 +29,8 @@ static inline void swapfunc(char *, char *, int, int);
 
 #define min(a, b)           \
     ({                      \
-        typeof(a) _a = (a); \
-        typeof(b) _b = (b); \
+        __typeof__(a) _a = (a); \
+        __typeof__(b) _b = (b); \
         _a < _b ? _a : _b;  \
     })
 
@@ -195,6 +194,7 @@ void qsort_mt(void *a,
 
     cond_signal(&qs->fcond_st, &qs->fmutex_st);
     mutex_unlock(&qs->fmutex_st);
+   
 
     /* Wait for all threads to finish, and free acquired resources. */
 f3:
@@ -352,6 +352,7 @@ nevermind:
         cond_signal(&qs2->fcond_st, &qs2->fmutex_st);
         // verify(pthread_mutex_unlock(&qs2->mtx_st));
         mutex_unlock(&qs2->fmutex_st);
+        
     } else if (nl > 0) {
         qs->a = a;
         qs->n = nl;
@@ -405,6 +406,7 @@ again:
             cond_signal(&qs2->fcond_st, &qs2->fmutex_st);
             // verify(pthread_mutex_unlock(&qs2->mtx_st));
             mutex_unlock(&qs2->fmutex_st);
+            
         }
         // verify(pthread_mutex_unlock(&c->mtx_al));
         mutex_unlock(&c->fmutex_al);
@@ -562,10 +564,10 @@ int main(int argc, char *argv[])
     }
     if (opt_time)
         printf(
-            // "%.3g %.3g %.3g\n",
-            // (end.tv_sec - start.tv_sec) + (end.tv_usec - start.tv_usec) / 1e6,
-            // ru.ru_utime.tv_sec + ru.ru_utime.tv_usec / 1e6,
-            // ru.ru_stime.tv_sec + ru.ru_stime.tv_usec / 1e6);
-            "%.3g\n",(end.tv_sec - start.tv_sec) + (end.tv_usec - start.tv_usec) / 1e6);
+            "%.3g %.3g %.3g\n",
+            (end.tv_sec - start.tv_sec) + (end.tv_usec - start.tv_usec) / 1e6,
+            ru.ru_utime.tv_sec + ru.ru_utime.tv_usec / 1e6,
+            ru.ru_stime.tv_sec + ru.ru_stime.tv_usec / 1e6);
+            // "%.3g\n",(end.tv_sec - start.tv_sec) + (end.tv_usec - start.tv_usec) / 1e6);
     return (0);
 }

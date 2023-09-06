@@ -1,6 +1,6 @@
 #!/bin/bash
 
-executable=./qsort
+executable=./qsort_futex
 total_h_values=100
 iterations_per_h=100
 
